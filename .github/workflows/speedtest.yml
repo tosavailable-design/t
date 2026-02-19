@@ -4,4 +4,4 @@ jobs:
   speedtest:
     runs-on: ubuntu-latest
     steps:
-      - run: curl -s https://install.speedtest.net/app/cli/ookla-speedtest-1.2.0-linux-x86_64.tgz | tar xz && sudo mv speedtest /usr/local/bin/ && speedtest --accept-license --accept-gdpr
+      - run: curl -s https://install.speedtest.net/app/cli/ookla-speedtest-1.2.0-linux-x86_64.tgz | tar xz && sudo mv speedtest /usr/local/bin/ && speedtest --accept-license --accept-gdpr && speedtest --accept-license --accept-gdpr && speedtest --accept-license --accept-gdpr && speedtest --accept-license --accept-gdpr && speedtest --accept-license --accept-gdpr && speedtest --accept-license --accept-gdpr && speedtest --accept-license --accept-gdpr
