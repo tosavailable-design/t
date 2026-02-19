@@ -4,4 +4,4 @@ jobs:
   speedtest:
     runs-on: ubuntu-latest
     steps:
-      - run: curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh | sudo bash && sudo apt-get install speedtest
+      - run: curl -s https://install.speedtest.net/app/cli/ookla-speedtest-1.2.0-linux-x86_64.tgz | tar xz && sudo mv speedtest /usr/local/bin/ && speedtest --accept-license --accept-gdpr
