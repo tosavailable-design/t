@@ -5,5 +5,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - run: clang -std=c23 -O3 -flto -march=native -o tsunami tsunami.c -pthread
+      - run: gcc -std=c23 -O3 -flto -march=native -o tsunami tsunami.c -pthread
       - run: sudo ./tsunami 216.202.205.235 80 4
