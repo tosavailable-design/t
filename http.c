@@ -16,14 +16,14 @@
 // Конфигурация для максимальной боли
 #define RING_ENTRIES 8192
 #define CONNS_PER_THREAD 1000
-#define NUM_THREADS 8 // Настрой под количество физических ядер
+#define NUM_THREADS 2 // Настрой под количество физических ядер
 #define REQ_SIZE 128
 #define RESP_SIZE 1024
 
 // Жестко закодированный HTTP запрос для максимальной скорости
 const char *http_req = 
     "GET / HTTP/1.1\r\n"
-    "Host: localhost\r\n"
+    "Host: dstats.cc\r\n"
     "Connection: keep-alive\r\n"
     "Accept: */*\r\n\r\n";
 
