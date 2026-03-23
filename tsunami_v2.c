@@ -24,7 +24,7 @@ struct t_data {
 void *a_thread(void *arg) {
     struct t_data *d = (struct t_data *)arg;
     int s_fd;
-    char p_buf[P_SIZE];
+    char p_buf[P_SIZE] __attribute__((aligned(64)));
     cpu_set_t cpuset;
 
     CPU_ZERO(&cpuset);
@@ -34,8 +34,24 @@ void *a_thread(void *arg) {
     s_fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (s_fd < 0) pthread_exit(NULL);
 
+    struct sockaddr_in local_addr;
+    memset(&local_addr, 0, sizeof(local_addr));
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    local_addr.sin_port = htons(10000 + d->t_id);
+    bind(s_fd, (struct sockaddr *)&local_addr, sizeof(local_addr));
+
+    if (connect(s_fd, (struct sockaddr *)&d->t_addr, sizeof(d->t_addr)) < 0) {
+        close(s_fd);
+        pthread_exit(NULL);
+    }
+
     int buf_size = S_BUF;
+    setsockopt(s_fd, SOL_SOCKET, SO_SNDBUFFORCE, &buf_size, sizeof(buf_size));
     setsockopt(s_fd, SOL_SOCKET, SO_SNDBUF, &buf_size, sizeof(buf_size));
+
+    int opt = 1;
+    setsockopt(s_fd, SOL_SOCKET, SO_DONTROUTE, &opt, sizeof(opt));
 
     for (int i = 0; i < P_SIZE; i++) {
         p_buf[i] = rand() & 0xFF;
@@ -50,12 +66,12 @@ void *a_thread(void *arg) {
         iovecs[i].iov_len = P_SIZE;
         msgs[i].msg_hdr.msg_iov = &iovecs[i];
         msgs[i].msg_hdr.msg_iovlen = 1;
-        msgs[i].msg_hdr.msg_name = &d->t_addr;
-        msgs[i].msg_hdr.msg_namelen = sizeof(d->t_addr);
+        msgs[i].msg_hdr.msg_name = NULL;
+        msgs[i].msg_hdr.msg_namelen = 0;
     }
 
     while (1) {
-        sendmmsg(s_fd, msgs, B_SIZE, 0);
+        sendmmsg(s_fd, msgs, B_SIZE, MSG_DONTWAIT);
     }
 
     close(s_fd);
