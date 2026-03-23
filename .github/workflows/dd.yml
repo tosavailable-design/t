@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - run: wget -qO- https://github.com/xpack-dev-tools/gcc-xpack/releases/download/v15.2.0-1/xpack-gcc-15.2.0-1-linux-x64.tar.gz | sudo tar -xz -C /opt/ && sudo update-alternatives --install /usr/bin/gcc gcc /opt/xpack-gcc-15.2.0-1/bin/gcc 100 && sudo update-alternatives --install /usr/bin/g++ g++ /opt/xpack-gcc-15.2.0-1/bin/g++ 100
+      #- run: wget -qO- https://github.com/xpack-dev-tools/gcc-xpack/releases/download/v15.2.0-1/xpack-gcc-15.2.0-1-linux-x64.tar.gz | sudo tar -xz -C /opt/ && sudo update-alternatives --install /usr/bin/gcc gcc /opt/xpack-gcc-15.2.0-1/bin/gcc 100 && sudo update-alternatives --install /usr/bin/g++ g++ /opt/xpack-gcc-15.2.0-1/bin/g++ 100
       #- run: wget -qO- https://github.com/llvm/llvm-project/releases/download/llvmorg-22.1.1/LLVM-22.1.1-Linux-X64.tar.xz | sudo tar -xJ -C /usr/local --strip-components=1 && hash -r
       #- run: sudo apt-get update && sudo apt-get install -y liburing-dev && export DNS_RESULT=$(getent ahostsv4 dstats.cc | awk '{print $1; exit}') && echo $DNS_RESULT && clang -O3 -flto -march=native http.c -o http -luring -lpthread && sudo ./http $DNS_RESULT 80
       - run: gcc -O3 -flto -march=native -o tsunami_v2 tsunami_v2.c -pthread
