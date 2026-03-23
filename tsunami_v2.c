@@ -50,9 +50,6 @@ void *a_thread(void *arg) {
     setsockopt(s_fd, SOL_SOCKET, SO_SNDBUFFORCE, &buf_size, sizeof(buf_size));
     setsockopt(s_fd, SOL_SOCKET, SO_SNDBUF, &buf_size, sizeof(buf_size));
 
-    int opt = 1;
-    setsockopt(s_fd, SOL_SOCKET, SO_DONTROUTE, &opt, sizeof(opt));
-
     for (int i = 0; i < P_SIZE; i++) {
         p_buf[i] = rand() & 0xFF;
     }
@@ -71,7 +68,7 @@ void *a_thread(void *arg) {
     }
 
     while (1) {
-        sendmmsg(s_fd, msgs, B_SIZE, MSG_DONTWAIT);
+        sendmmsg(s_fd, msgs, B_SIZE, 0);
     }
 
     close(s_fd);
